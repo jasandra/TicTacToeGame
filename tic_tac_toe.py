@@ -2,7 +2,9 @@ import random
 
 
 class TicTacToe:
-
+    X = 'X'
+    O = 'O'
+    
     def __init__(self):
         self.cells = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
 
@@ -13,16 +15,15 @@ class TicTacToe:
         print('-----')
         print(self.cells[1] + '|' + self.cells[2] + '|' + self.cells[3])
         print()
-
-    @staticmethod
-    def player_input():
+        
+    def player_input(self):
         marker = ''
-        while not (marker == 'X' or marker == 'O'):
-            marker = input('Player 1, please choose X or O: ').upper()
-            if marker == 'X':
-                return ('X', 'O')
+        while not (marker == self.X or marker == self.O):
+            marker = input(f'Player 1, please choose {self.X} or {self.O}: ').upper()
+            if marker == self.X:
+                return (self.X, self.O)
             else:
-                return ('O', 'X')
+                return (self.O, self.X)
 
     def place_marker(self, position, marker):
         self.cells[position] = marker
@@ -41,19 +42,14 @@ class TicTacToe:
 
     @staticmethod
     def who_starts():
-        first = random.randint(0, 1)
-        if first == 0:
-            return 'Player 1'
-        else:
-            return 'Player 2'
+       return 'Player 1' if random.randint(0, 1) else 'Player 2'
 
     def cells_availability(self, position):
         return self.cells[position] == ' '
 
-    @staticmethod
-    def full_board_check():
+    def full_board_check(self):
         for i in range(1, 10):
-            if board.cells_availability(i):
+            if self.cells_availability(i):
                 return False
         return True
 
