@@ -4,51 +4,53 @@ import random
 class TicTacToe:
     X = 'X'
     O = 'O'
-    
+
     def __init__(self):
-        self.cells = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+        self.cells = [' '] * 9
 
     def display_board(self):
-        print(self.cells[7] + '|' + self.cells[8] + '|' + self.cells[9])
+        print(self.cells[6] + '|' + self.cells[7] + '|' + self.cells[8])
         print('-----')
-        print(self.cells[4] + '|' + self.cells[5] + '|' + self.cells[6])
+        print(self.cells[3] + '|' + self.cells[4] + '|' + self.cells[5])
         print('-----')
-        print(self.cells[1] + '|' + self.cells[2] + '|' + self.cells[3])
+        print(self.cells[0] + '|' + self.cells[1] + '|' + self.cells[2])
         print()
-        
+
     def player_input(self):
         marker = ''
         while not (marker == self.X or marker == self.O):
             marker = input(f'Player 1, please choose {self.X} or {self.O}: ').upper()
             if marker == self.X:
                 return (self.X, self.O)
-            else:
+            elif marker == self.O:
                 return (self.O, self.X)
+            else:
+                print(f'Wrong character.')
 
     def place_marker(self, position, marker):
         self.cells[position] = marker
 
     def win_combinations(self, mark):
         return (
-                (self.cells[1] == mark and self.cells[2] == mark and self.cells[3] == mark) or
-                (self.cells[4] == mark and self.cells[5] == mark and self.cells[6] == mark) or
-                (self.cells[7] == mark and self.cells[8] == mark and self.cells[9] == mark) or
+                (self.cells[0] == mark and self.cells[1] == mark and self.cells[2] == mark) or
+                (self.cells[3] == mark and self.cells[4] == mark and self.cells[5] == mark) or
+                (self.cells[6] == mark and self.cells[7] == mark and self.cells[8] == mark) or
+                (self.cells[0] == mark and self.cells[3] == mark and self.cells[6] == mark) or
                 (self.cells[1] == mark and self.cells[4] == mark and self.cells[7] == mark) or
                 (self.cells[2] == mark and self.cells[5] == mark and self.cells[8] == mark) or
-                (self.cells[3] == mark and self.cells[6] == mark and self.cells[9] == mark) or
-                (self.cells[1] == mark and self.cells[5] == mark and self.cells[9] == mark) or
-                (self.cells[3] == mark and self.cells[5] == mark and self.cells[7] == mark)
+                (self.cells[0] == mark and self.cells[4] == mark and self.cells[8] == mark) or
+                (self.cells[2] == mark and self.cells[4] == mark and self.cells[6] == mark)
         )
 
     @staticmethod
     def who_starts():
-       return 'Player 1' if random.randint(0, 1) else 'Player 2'
+        return 'Player 1' if random.randint(0, 1) else 'Player 2'
 
     def cells_availability(self, position):
         return self.cells[position] == ' '
 
     def full_board_check(self):
-        for i in range(1, 10):
+        for i in range(0, 9):
             if self.cells_availability(i):
                 return False
         return True
@@ -59,21 +61,25 @@ class TicTacToe:
 
         while position not in range(1, 9) or not board.cells_availability(position):
             position = int(input('Choose a position [number from 1 to 9]: '))
+            position -= 1
             return position
 
     @staticmethod
     def play_again():
-        replay = input('Do you want to play again? [Y/N]: ').upper()
-        if replay == 'Y':
-            return replay
-        else:
-            print('The end of the game')
+        while True:
+            replay = input('Do you want to play again? [Y/N]: ').upper()
+            if replay == 'Y':
+                return replay
+            elif replay == 'N':
+                print('The end of the game')
+                break
+            else:
+                print('Wrong character.')
 
 
 print('Welcome to Tic Tac Toe!')
 while True:
     board = TicTacToe()
-    the_board = [' '] * 10
     Player1_marker, Player2_marker = board.player_input()
 
     turn = board.who_starts()
