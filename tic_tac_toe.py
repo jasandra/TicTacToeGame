@@ -9,11 +9,11 @@ class TicTacToe:
         self.cells = [' '] * 9
 
     def display_board(self):
-        print(self.cells[6] + '|' + self.cells[7] + '|' + self.cells[8])
+        print("|".join(self.cells[6:9]))
         print('-----')
-        print(self.cells[3] + '|' + self.cells[4] + '|' + self.cells[5])
+        print("|".join(self.cells[3:6]))
         print('-----')
-        print(self.cells[0] + '|' + self.cells[1] + '|' + self.cells[2])
+        print("|".join(self.cells[0:3]))
         print()
 
     def player_input(self):
@@ -25,21 +25,21 @@ class TicTacToe:
             elif marker == self.O:
                 return (self.O, self.X)
             else:
-                print(f'Wrong character.')
+                print(f'Wrong character!')
 
     def place_marker(self, position, marker):
         self.cells[position] = marker
 
     def win_combinations(self, mark):
         return (
-                (self.cells[0] == mark and self.cells[1] == mark and self.cells[2] == mark) or
-                (self.cells[3] == mark and self.cells[4] == mark and self.cells[5] == mark) or
-                (self.cells[6] == mark and self.cells[7] == mark and self.cells[8] == mark) or
-                (self.cells[0] == mark and self.cells[3] == mark and self.cells[6] == mark) or
-                (self.cells[1] == mark and self.cells[4] == mark and self.cells[7] == mark) or
-                (self.cells[2] == mark and self.cells[5] == mark and self.cells[8] == mark) or
-                (self.cells[0] == mark and self.cells[4] == mark and self.cells[8] == mark) or
-                (self.cells[2] == mark and self.cells[4] == mark and self.cells[6] == mark)
+                all(cell == mark for cell in self.cells[0:3]) or
+                all(cell == mark for cell in self.cells[3:7]) or
+                all(cell == mark for cell in self.cells[7:9]) or
+                all(cell == mark for cell in self.cells[0:7:3]) or
+                all(cell == mark for cell in self.cells[1:8:3]) or
+                all(cell == mark for cell in self.cells[2:9:3]) or
+                all(cell == mark for cell in self.cells[0:9:4]) or
+                all(cell == mark for cell in self.cells[2:7:2])
         )
 
     @staticmethod
@@ -74,14 +74,34 @@ class TicTacToe:
                 print('The end of the game')
                 break
             else:
-                print('Wrong character.')
+                print('Wrong character!')
 
 
 print('Welcome to Tic Tac Toe!')
+
+
+def players_turn(player_name):
+    global game_on
+    markers = {"Player 1": Player1_marker,
+               "Player 2": Player2_marker}
+    marker = markers[player_name]
+    board.display_board()
+    position = board.position_choice()
+    board.place_marker(position, marker)
+    if board.win_combinations(marker):
+        board.display_board()
+        print(f'{player_name} is the winner!')
+        game_on = False
+    else:
+        if board.full_board_check():
+            board.display_board()
+            print('Tie game!')
+            game_on = False
+
+
 while True:
     board = TicTacToe()
     Player1_marker, Player2_marker = board.player_input()
-
     turn = board.who_starts()
     print(f'{turn} will start')
 
@@ -93,34 +113,10 @@ while True:
 
     while game_on:
         if turn == 'Player 1':
-            board.display_board()
-            position = board.position_choice()
-            marker = board.place_marker(position, Player1_marker)
-            if board.win_combinations(Player1_marker):
-                board.display_board()
-                print('Player 1 is the winner!')
-                game_on = False
-            else:
-                if board.full_board_check():
-                    board.display_board()
-                    print('Tie game!')
-                    game_on = False
-                else:
-                    turn = 'Player 2'
+            players_turn(turn)
+            turn = 'Player 2'
         else:
-            board.display_board()
-            position = board.position_choice()
-            marker = board.place_marker(position, Player2_marker)
-            if board.win_combinations(Player2_marker):
-                board.display_board()
-                print('Player 2 is the winner!')
-                break
-            else:
-                if board.full_board_check():
-                    board.display_board()
-                    print('Tie game!')
-                    break
-                else:
-                    turn = 'Player 1'
+            players_turn(turn)
+            turn = 'Player 1'
     if not board.play_again():
         break
