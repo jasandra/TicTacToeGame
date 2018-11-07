@@ -64,8 +64,6 @@ class TicTacToe:
             position = int(input('Choose a position [number from 1 to 9]: '))
             position -= 1
             return position
-        else:
-            print(f'That position is already taken')
 
     def possible_moves(self, moves_list):
         moves = []
