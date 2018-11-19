@@ -55,23 +55,19 @@ class TicTacToe:
                 return False
         return True
 
-    @staticmethod
-    def position_choice():
+    def position_choice(self):
         position = 0
-
 
         while position not in range(1, 9) or not board.cells_availability(position):
             position = int(input('Choose a position [number from 1 to 9]: '))
+            if not (position >= 1 and position <= 9):
+                print('Try again with a position number from 1 to 9: ')
+                continue
             position -= 1
+            if self.cells[position] != " ":
+                print("That position is already taken. Try again")
+                continue
             return position
-
-    def possible_moves(self, moves_list):
-        moves = []
-        for i in moves_list:
-            if self.position_choice(i):
-                moves.append(i)
-            else:
-                print(f'That position is already taken. Choose another.')
 
     @staticmethod
     def play_again():
@@ -85,16 +81,15 @@ class TicTacToe:
             else:
                 print('Wrong character!')
 
-
     print('Welcome to Tic Tac Toe!')
+
 
 def players_turn(player_name):
     markers = {"Player 1": Player1_marker,
-                "Player 2": Player2_marker}
+               "Player 2": Player2_marker}
     marker = markers[player_name]
     board.display_board()
     position = board.position_choice()
-    board.possible_moves(moves_list=[])
     board.place_marker(position, marker)
 
     if board.win_combinations(marker):
@@ -107,7 +102,6 @@ def players_turn(player_name):
             print('Tie game!')
             return False
         return True
-
 
 
 while True:
@@ -131,3 +125,4 @@ while True:
             turn = 'Player 1'
     if not board.play_again():
         break
+        
